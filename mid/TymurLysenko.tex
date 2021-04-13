@@ -1,0 +1,297 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+\usepackage[english]{babel}
+\usepackage[amsmath]{ntheorem}
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTURES: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center class
+
+% Document settings
+
+\setlength{\parskip}{1em}
+
+% Theorems
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{break}
+\theoremheaderfont{\itshape\hspace{-\theoremindent}}
+\theoremindent10pt
+\newtheorem{property}{Property}[section]
+
+% Custom operations
+
+\newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
+\newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
+
+\newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
+\newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+\newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{\frac{#1 \cdot j \cdot \pi }{#2}}} }
+\newcommandx{\eulersvalue}[1][1=x]{\ensuremath{\cos(#1) + i\sin(#1)} }
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+
+% Title
+
+\title{Digital Signal Processing. Midterm}
+\author{Tymur Lysenko}
+\affil{BS18-02SE, Innopolis University}
+\date{Date of Birth: 05.07.1999}
+
+
+% Document
+
+\begin{document}
+
+\maketitle
+
+\section{Task 1}
+
+\subsection*{Problem statement}
+
+Let us define the following binary operation \taskop in $C^{2}$: for any two vectors $v = (v_1, v_2)$ and $w = (w_1, w_2)$ let $\taskop[v][w] = (-1)^{day} \cdot month \cdot v_1w_1^* + year \cdot v_2^*w_2$. Is this operation a dot-product? If yes then prove, otherwise explain what dot-product axioms do hold and what do fail.
+
+\subsection*{Solution}
+
+First, substitute the values to the equation and get the unparameterized (with respect to the task parameters) formula for the operation:
+
+\begin{itemize}
+  \item $day = 5$
+  \item $month = 7$
+  \item $year = 1999$
+\end{itemize}
+
+\begin{equation*}
+  \begin{split}
+    \taskop[v][w]
+      &= (-1)^{day} \cdot month \cdot v_1w_1^* + year \cdot v_2^*w_2\\
+      &= (-1)^{5} \cdot 7 \cdot v_1w_1^* + 1999 \cdot v_2^*w_2\\
+      &= -7 \cdot v_1w_1^* + 1999 \cdot v_2^*w_2
+  \end{split}
+\end{equation*}
+
+
+Let us start with the definition of a \textbf{inner product} (alternatively, \textbf{dot product}).
+
+\begin{definition}[Inner product]
+  For a vector space $V$ over the field $F$, inner product is a mapping $\innerp: V \times V \rightarrow F$, s. t. the following 3 properties are satisfied for all vectors $u, v, w \in V$ and all scalars $a, b \in F$:
+
+  \begin{property}[Conjugate symmetry] \label{prop:conj_sym}
+    $$\innerp[u][v] = \innerp[v][u]^*$$
+  \end{property}
+
+  \begin{property}[Linearity in the first argument] \label{prop:liearity}
+    $$\innerp[au + bv][w] = a\innerp[u][w] + b\innerp[v][w]$$
+  \end{property}
+
+  \begin{property}[Positive-definiteness] \label{prop:pos-def}
+    $$
+    \left\{
+      \begin{array}{ll}
+        \innerp[v][v] > 0, & v \neq 0 \\
+        \innerp[0][0] = 0, & 
+      \end{array}
+    \right.
+    $$
+  \end{property}
+
+\end{definition}
+
+Assume that operation \taskop is an inner product. Then the properties above hold. Let's check this.
+
+\subsection{Conjugate symmetry}
+
+\begin{equation} \label{eqn:task1_source_eq}
+  \taskop[v][w] = -7 \cdot v_1w_1^* + 1999 \cdot v_2^*w_2
+\end{equation}
+
+\begin{equation} \label{eqn:task1_eq_conjugation}
+  \begin{split}
+    \taskop[w][v]^*
+      &= (-7 \cdot w_1v_1^* + 1999 \cdot w_2^*v_2)^* \\
+      &= -7 \cdot (w_1v_1^*)^* + 1999 \cdot (w_2^*v_2)^* \\
+      &= -7 \cdot w_1^*v_1 + 1999 \cdot w_2v_2^* \\
+      &= -7 \cdot v_1w_1^* + 1999 \cdot v_2^*w_2 \\
+  \end{split}
+\end{equation}
+
+It is clear from above that $\eqref{eqn:task1_source_eq} = \eqref{eqn:task1_eq_conjugation} = -7 \cdot v_1w_1^* + 1999 \cdot v_2^*w_2$, hence $\taskop[v][w] = \taskop[w][v]^*$, so the \textbf{conjugate symmetry \ref{prop:conj_sym}} property holds.
+
+\subsection{Linearity in the first argument}
+
+\begin{equation} \label{eqn:task1_eq_linearity}
+  \begin{split}
+    \taskop[av + bu][w]
+      &= -7 \cdot (av_1 + bu_1)w_1^* + 1999 \cdot (av_2 + bu_2)^*w_2 \\
+      &= -7 \cdot av_1w_1^* - 7 \cdot bu_1w_1^* + 1999 \cdot a^*v_2^*w_2 + 1999 \cdot b^*u_2^*w_2 \\
+      &= -7 \cdot av_1w_1^* + 1999 \cdot a^*v_2^*w_2 - 7 \cdot bu_1w_1^* + 1999 \cdot b^*u_2^*w_2 \\
+      &= -7 \cdot av_1w_1^* + 1999 \cdot (av_2)^*w_2 - 7 \cdot bu_1w_1^* + 1999 \cdot (bu_2)^*w_2 \\
+      &= \taskop[av][w] + \taskop[bu][w]
+  \end{split}
+\end{equation}
+
+As can be seen, the \textbf{linearity property \ref{prop:liearity}} does not hold for any field $F$. When $F = \mathbb{C}$ there exist $x \in \mathbb{C}$, s. t. $x \neq x^*$, so the operation \taskop is not an inner product of vector space $V$ over the field $\mathbb{C}$.
+
+However, if $F = \mathbb{R}$, then $\forall x \in \mathbb{R}. x = x^*$, then \eqref{eqn:task1_eq_linearity} can be extended further:
+
+\begin{equation*}
+  \begin{split}
+    \taskop[av + bu][w] &= \dotsc \\
+      &= -7 \cdot av_1w_1^* + 1999 \cdot (av_2)^*w_2 - 7 \cdot bu_1w_1^* + 1999 \cdot (bu_2)^*w_2 \\
+      &= -7 \cdot av_1w_1 + 1999 \cdot av_2w_2 - 7 \cdot bu_1w_1 + 1999 \cdot bu_2w_2 \\
+      &= a(-7 \cdot v_1w_1 + 1999 \cdot v_2w_2) + b(-7 \cdot u_1w_1 + 1999 \cdot u_2w_2) \\
+      &= a\taskop[v][w] + b\taskop[u][w]
+  \end{split}
+\end{equation*}
+
+Hence, the \textbf{linearity in the first argument \ref{prop:liearity}} holds for \taskop when $F = \mathbb{R}$.
+
+\subsection{Positive-definiteness}
+
+Assume $v = 0$, then:
+
+\begin{equation*}
+  \begin{split}
+    \taskop[0][0] = -7 \cdot 0 \cdot 0 + 1999 \cdot 0 \cdot 0 = 0
+  \end{split}
+\end{equation*}
+
+Assume $v \neq 0$, then:
+
+\begin{equation} \label{eqn:task1_eq_self}
+  \begin{split}
+    \taskop[v][v]
+      &= -7 \cdot v_1v_1^* + 1999 \cdot v_2^*v_2 \\
+      &= -7 \cdot \abs{v_1}^2 + 1999 \cdot \abs{v_2}^2
+  \end{split}
+\end{equation}
+
+Let us find such combination of $v_1$ and $v_2$ that \eqref{eqn:task1_eq_self} is less than 0.
+
+\begin{equation*}
+  \begin{split}
+    -7 \cdot \abs{v_1}^2 + 1999 \cdot \abs{v_2}^2 &< 0 \\
+    1999 \cdot \abs{v_2}^2 &< 7 \cdot \abs{v_1}^2 \\
+    \frac{1999}{7} \cdot \abs{v_2}^2 &< \abs{v_1}^2
+  \end{split}
+\end{equation*}
+
+The last equation has infinitely many solutions both in $\mathbb{C}$ and $\mathbb{R}$. It means that there exists such vector $v \in V$ that $\taskop[v][v] < 0$, so the property does not hold and hence, the operation \taskop is not an inner product of vector space over fields $\mathbb{C}$ and $\mathbb{R}$.
+
+\section{Task 2}
+
+\subsection*{Problem statement}
+
+Let us consider ($year$)-dimentional (complex) impulse-domain. Firstly, starting with/from the definition of the DFT, compute and give an explicit (in terms of trigonometric functions) representation for DFT of the following two signals:
+
+\begin{itemize}
+  \item $\delta_{(n - month)\ mod\ year}$
+  \item $day^n$
+\end{itemize}
+
+Then starting with/from the definition of the IDFT validate that IDFT applied to the results returns exactly these signals.
+
+\subsection*{Solution}
+
+\subsection{Common definitions}
+
+Assume that indexes start with 0.
+
+Substituting task parameters, we get the following signals:
+
+\begin{itemize}
+  \item $\delta_{(n - 7)\ mod\ 1999}$
+  \item $5^n$
+\end{itemize}
+
+Let us define $\W = \Wval$.
+
+For $n$-th component of a periodic signal $x$ with period $m$ ($0 \leq n \leq m$) DFT is defined as follows:
+
+\begin{equation} \label{eqn:dft}
+  \begin{split}
+    X_n = \sum_{k = 0}^{k = m - 1} x_k \W
+  \end{split}
+\end{equation}
+
+For $n$-th component of a periodic signal $x$ with period $m$ ($0 \leq n \leq m$) IDFT is defined as follows:
+
+\begin{equation} \label{eqn:idft}
+  \begin{split}
+    x_n = \frac{1}{m} \sum_{k = 0}^{k = m - 1} X_k \W[-kn]
+  \end{split}
+\end{equation}
+
+\subsection{$\delta_{(n - 7)\ mod\ 1999}$}
+
+\subsubsection{DFT}
+
+We know, that $\delta_{(n - 7)\ mod\ 1999}$ is a periodic sequence of size 1999 with 1 at 7-th index and 0-es being values for other indexes. Using the definition \eqref{eqn:dft} we get that each element of the resulting sequence consists of a sum of zeroes plus $\W[7n][1999]$:
+
+\begin{equation} \label{eqn:delta-dft}
+  \begin{split}
+    X_n &= \W[7n][1999] \\
+        &= \Wval[7n][1999] \\
+        &= \Wvalcoef[14n][1999] \\
+        &= \eulersvalue[\frac{14n}{1999}\pi]
+  \end{split}
+\end{equation}
+
+\subsubsection{IDFT}
+
+Now apply the inverse transform \eqref{eqn:idft} to \eqref{eqn:delta-dft} to get back the original signal and validate that IDFT works:
+
+\begin{equation*}
+  \begin{split}
+    x_n &= \frac{1}{1999} \sum_{k = 0}^{k = 1998} \W[7k][1999] \W[-kn][1999] \\
+        &= \frac{1}{1999} \sum_{k = 0}^{k = 1998} \Wvalcoef[14k][1999] \Wval[(-kn)][1999] \\
+        &= \frac{1}{1999} \sum_{k = 0}^{k = 1998} \Wvalcoef[(7 - n) \cdot 2k][1999]
+  \end{split}
+\end{equation*}
+
+
+For $n = 7$ the series term is 1 and it is summed up 1999 times and then divided by 1999, which is exactly 1.
+
+The term of the above series is the geometric progression with initial value 1 and common ratio $\Wvalcoef[(7 - n) \cdot 2k][1999]$, so the sum is:
+
+\begin{equation} \label{eqn:idft-series}
+  \begin{split}
+    x_n &= \frac{1}{1999} \cdot
+           \frac{1 - \Wvalcoef[(7 - n) \cdot 2k \cdot 1999][1999]}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]} \\
+        &= \frac{1}{1999} \cdot
+           \frac{1 - e^{(7 - n) \cdot 2k \cdot j \pi}}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]}
+  \end{split}
+\end{equation}
+
+Apply the formula $e^{ix} = \eulersvalue$ to \eqref{eqn:idft-series}:
+
+\begin{equation*}
+  \begin{split}
+    x_n &= \frac{1}{1999} \cdot
+           \frac{1 - (\eulersvalue[(7 - n) \cdot 2k \pi])}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]}
+  \end{split}
+\end{equation*}
+
+For $n \neq 7$ the arguments of the expression form the nominator $\eulersvalue[(7 - n) \cdot 2k \pi]$ is multiple of $2k\pi$, where $k \in \mathbb{N}$. As it is known $cos$ of such arguments is always 1 and $sin$ is 0. Hence, the nominator equals to 0.
+
+
+\subsection{$5^n$}
+
+Intentionally left blank... for now...
+
+% \section{Task 3}
+
+% \subsection{Problem statement}
+
+\end{document}
