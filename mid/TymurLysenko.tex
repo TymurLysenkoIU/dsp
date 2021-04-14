@@ -35,9 +35,9 @@
 \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
 
 \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
-\newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
-\newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{\frac{#1 \cdot j \cdot \pi }{#2}}} }
-\newcommandx{\eulersvalue}[1][1=x]{\ensuremath{\cos(#1) + j\sin(#1)} }
+\newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+\newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
+\newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
@@ -244,7 +244,7 @@ We know, that $\delta_{(n - 7)\ mod\ 1999}$ is a periodic sequence of size 1999 
     X_n &= \W[7n][1999] \\
         &= \Wval[7n][1999] \\
         &= \Wvalcoef[14n][1999] \\
-        &= \eulersvalue[\frac{14n}{1999}\pi]
+        &= \eulersvalue[\frac{14n}{1999}\pi][-]
   \end{split}
 \end{equation}
 
@@ -270,25 +270,56 @@ The term of the above series is the geometric progression with initial value 1 a
     x_n &= \frac{1}{1999} \cdot
            \frac{1 - \Wvalcoef[(7 - n) \cdot 2 \cdot 1999][1999]}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]} \\
         &= \frac{1}{1999} \cdot
-           \frac{1 - e^{(7 - n) \cdot 2 \cdot j \pi}}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
+           \frac{1 - e^{-(7 - n) \cdot 2 \cdot j \pi}}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
   \end{split}
 \end{equation}
 
-Apply the formula $e^{ix} = \eulersvalue$ to \eqref{eqn:idft-series}:
+Apply the formula $e^{jx} = \eulersvalue$ to \eqref{eqn:idft-series}:
 
 \begin{equation*}
   \begin{split}
     x_n &= \frac{1}{1999} \cdot
-           \frac{1 - (\eulersvalue[(7 - n) \cdot 2 \pi])}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
+           \frac{1 - (\eulersvalue[(7 - n) \cdot 2 \pi][-])}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
   \end{split}
 \end{equation*}
 
-For $n \neq 7$ the arguments of the expression form the nominator $\eulersvalue[(7 - n) \cdot 2 \pi]$ is multiple of $2\pi$. As it is known $cos$ of such arguments is always 1 and $sin$ is 0. Hence, the nominator equals to 0.
+For $n \neq 7$ the arguments of the expression form the nominator $\eulersvalue[(7 - n) \cdot 2 \pi][-]$ is multiple of $2\pi$. As it is known $cos$ of such arguments is always 1 and $sin$ is 0. Hence, the nominator equals to 0.
 
 
 \subsection{$5^n$}
 
-Intentionally left blank... for now...
+\subsubsection{DFT}
+
+\begin{equation*}
+  \begin{split}
+    X_n &= \sum_{k = 0}^{1998} 5^k \cdot \W[kn][1999] \\
+        &= \sum_{k = 0}^{1998} 5^k \cdot \Wval[kn][1999]
+  \end{split}
+\end{equation*}
+
+The above series is a sum of geometric progression with initial value 1 and common ratio $5 \cdot \Wval[n][1999]$, then it can be simplified:
+
+\begin{equation*}
+  \begin{split}
+    X_n &= \frac{1 - 5^{1999} \cdot \Wval[1999n][1999]}
+                {1 - 5 \cdot \Wval[n][1999]} \\
+        &= \frac{1 - 5^{1999} \cdot e^{-2 n \pi j}}
+                {1 - 5 \cdot \Wval[n][1999]} \\
+        &= \frac{1 - 5^{1999} \cdot (\eulersvalue[-2 n \pi][-])}
+                {1 - 5 \cdot \Wval[n][1999]}
+  \end{split}
+\end{equation*}
+
+At first, let us simplify the numerator $1 - 5^{1999} \cdot (\eulersvalue[-2 n \pi][-])$. The $\cos$ and $\sin$ have arguments that are multiples of $2\pi$ ($n \in \mathbb{N}$). It means that they equal  1 and 0 respectively, hence:
+
+\begin{equation*}
+  \begin{split}
+    X_n &= \frac{1 - 5^{1999}}
+                {1 - 5 \cdot \Wval[n][1999]} \\
+        &= \frac{1 - 5^{1999}}
+                {1 - 5 \cdot \eulersvalue[\frac{2}{1999} n \pi][-]}
+  \end{split}
+\end{equation*}
 
 % \section{Task 3}
 
