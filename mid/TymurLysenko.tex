@@ -37,7 +37,7 @@
 \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
 \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
 \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{\frac{#1 \cdot j \cdot \pi }{#2}}} }
-\newcommandx{\eulersvalue}[1][1=x]{\ensuremath{\cos(#1) + i\sin(#1)} }
+\newcommandx{\eulersvalue}[1][1=x]{\ensuremath{\cos(#1) + j\sin(#1)} }
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
@@ -263,14 +263,14 @@ Now apply the inverse transform \eqref{eqn:idft} to \eqref{eqn:delta-dft} to get
 
 For $n = 7$ the series term is 1 and it is summed up 1999 times and then divided by 1999, which is exactly 1.
 
-The term of the above series is the geometric progression with initial value 1 and common ratio $\Wvalcoef[(7 - n) \cdot 2k][1999]$, so the sum is:
+The term of the above series is the geometric progression with initial value 1 and common ratio $\Wvalcoef[(7 - n) \cdot 2][1999]$, so the sum is:
 
 \begin{equation} \label{eqn:idft-series}
   \begin{split}
     x_n &= \frac{1}{1999} \cdot
-           \frac{1 - \Wvalcoef[(7 - n) \cdot 2k \cdot 1999][1999]}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]} \\
+           \frac{1 - \Wvalcoef[(7 - n) \cdot 2 \cdot 1999][1999]}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]} \\
         &= \frac{1}{1999} \cdot
-           \frac{1 - e^{(7 - n) \cdot 2k \cdot j \pi}}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]}
+           \frac{1 - e^{(7 - n) \cdot 2 \cdot j \pi}}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
   \end{split}
 \end{equation}
 
@@ -279,11 +279,11 @@ Apply the formula $e^{ix} = \eulersvalue$ to \eqref{eqn:idft-series}:
 \begin{equation*}
   \begin{split}
     x_n &= \frac{1}{1999} \cdot
-           \frac{1 - (\eulersvalue[(7 - n) \cdot 2k \pi])}{1 - \Wvalcoef[(7 - n) \cdot 2k][1999]}
+           \frac{1 - (\eulersvalue[(7 - n) \cdot 2 \pi])}{1 - \Wvalcoef[(7 - n) \cdot 2][1999]}
   \end{split}
 \end{equation*}
 
-For $n \neq 7$ the arguments of the expression form the nominator $\eulersvalue[(7 - n) \cdot 2k \pi]$ is multiple of $2k\pi$, where $k \in \mathbb{N}$. As it is known $cos$ of such arguments is always 1 and $sin$ is 0. Hence, the nominator equals to 0.
+For $n \neq 7$ the arguments of the expression form the nominator $\eulersvalue[(7 - n) \cdot 2 \pi]$ is multiple of $2\pi$. As it is known $cos$ of such arguments is always 1 and $sin$ is 0. Hence, the nominator equals to 0.
 
 
 \subsection{$5^n$}
