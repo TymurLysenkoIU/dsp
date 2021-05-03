@@ -1,0 +1,146 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+\usepackage[english]{babel}
+\usepackage[amsmath]{ntheorem}
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTURES: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center class
+
+% Document settings
+
+\setlength{\parskip}{1em}
+
+% Theorems
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{break}
+\theoremheaderfont{\itshape\hspace{-\theoremindent}}
+\theoremindent10pt
+\newtheorem{property}{Property}[section]
+
+% Custom operations
+
+\newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
+
+% \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
+% \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
+
+% \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
+% \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+% \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
+% \newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
+
+% \DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+
+% Title
+
+\title{Digital Signal Processing. Second Midterm}
+\author{Tymur Lysenko}
+\affil{BS18-02SE, Innopolis University}
+\date{Date of Birth: 05.07.1999}
+
+
+% Document
+
+\begin{document}
+
+\maketitle
+
+\section*{Variant}
+
+\begin{flalign*}
+  &day = 5& \\
+  &month = 7& \\
+  &year = 1999& \\
+\end{flalign*}
+
+\section{Task 1}
+
+\subsection*{Problem statement}
+
+\newcommandx{\taskonesignal}[2][1=day, 2=month]{\ensuremath{\left(\frac{\sqrt{#1}}{\sqrt{#1 + #2}}, \frac{\sqrt{#2}}{\sqrt{#1 + #2}}\right)} }
+\newcommandx{\taskonesignalvalue}[0][]{\ensuremath{\left(\frac{\sqrt{5}}{\sqrt{12}}, \frac{\sqrt{7}}{\sqrt{12}}\right)} }
+
+Starting with the definitions, compute (according to your actual variant) cross-correlation of the box signal of length 3 with a finite signal \taskonesignal.
+
+\subsection*{Solution}
+
+Start with the definitions.
+
+\newcommandx{\boxsignal}[1][1=n]{\ensuremath{box^{#1}} }
+
+\newcommandx{\boxsignalvalue}[1][1=n]{\ensuremath{\left( \cdots w_{-1} = 0 \quad \boldsymbol{w_0 = 1} \quad \cdots \quad w_{#1 - 1} = 1 \quad w_{#1} = 0 \cdots \right)} }
+
+\newcommandx{\boxsignalvaluethree}[0][]{\ensuremath{\left( \cdots 0 \quad 0 \quad \boldsymbol{1} \quad 1 \quad 1 \quad 0 \quad 0 \cdots \right)} }
+
+\begin{definition}[Box signal]
+  Box signal of length $n > 0$ is a two-side infinite sequence, s. t. all elements are 0, except those starting from the 0-th element until $n - 1$-st element:
+
+  \begin{equation*}
+    \boxsignal = \boxsignalvalue
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Cross-correlation ($\star$)]
+  Cross-correlation of 2 complex infinite signals $x$ and $y$, denoted as $\star$ (star), is an infinite signal c, $n$-th element of which is calculated as follows:
+
+  \begin{equation*}
+    c_n = (x \star y)_n = \sum_{k = -\infty}^{k = +\infty} x_k^* y_{k + n},
+  \end{equation*}
+
+  where $^*$ is a complex conjugate.
+\end{definition}
+
+Now the cross-correlation can be computed for the task.
+
+\begin{equation*}
+  \begin{split}
+    c = \boxsignal[3] \star \taskonesignalvalue = \boxsignalvaluethree \star \taskonesignalvalue
+  \end{split}
+\end{equation*}
+
+For $n$ outside of range $[-2, 1]$, $c_n = 0$, since the \taskonesignalvalue will be multiplied with 0-s element-wise to calculate the cross-correlation, hence the sum of the products will be 0. It is only left to calculate non-zero elements of the cross-correlation:
+
+\begin{alignat*}{2}
+  \idx{c}[-2]
+    &= \idx{\boxsignal[3]}[2]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[3]^* \cdot \taskonesignalvalue_1 \\
+    &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &0 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+    &= \frac{\sqrt{5}}{\sqrt{12}} && \\
+  \\
+  \idx{c}[-1]
+    &= \idx{\boxsignal[3]}[1]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[2]^* \cdot \taskonesignalvalue_1 \\
+    &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+    &= \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} && \\
+    \\
+    \idx{c}[0]
+      &= \idx{\boxsignal[3]}[0]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[1]^* \cdot \taskonesignalvalue_1 \\
+      &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+      &= \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} && \\
+    \\
+    \idx{c}[1]
+      &= \idx{\boxsignal[3]}[-1]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[0]^* \cdot \taskonesignalvalue_1 \\
+      &= 0 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+      &= \frac{\sqrt{7}}{\sqrt{12}} && \\
+\end{alignat*}
+
+\subsection*{Conclusion}
+
+\begin{equation*}
+  \begin{split}
+    c = \boxsignal[3] \star \taskonesignalvalue = (\cdots 0 \quad \frac{\sqrt{5}}{\sqrt{12}} \quad \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} \quad \boldsymbol{\frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}}} \quad \frac{\sqrt{7}}{\sqrt{12}} \quad 0 \cdots)
+  \end{split}
+\end{equation*}
+
+\end{document}
