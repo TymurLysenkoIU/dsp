@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=2cm]{geometry}
 \usepackage[hidelinks]{hyperref}
-\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots}
 \usepackage[T1]{fontenc}
 \usepackage[affil-it]{authblk}
 \usepackage[english]{babel}
@@ -73,7 +73,7 @@
 \newcommandx{\taskonesignal}[2][1=day, 2=month]{\ensuremath{\left(\frac{\sqrt{#1}}{\sqrt{#1 + #2}}, \frac{\sqrt{#2}}{\sqrt{#1 + #2}}\right)} }
 \newcommandx{\taskonesignalvalue}[0][]{\ensuremath{\left(\frac{\sqrt{5}}{\sqrt{12}}, \frac{\sqrt{7}}{\sqrt{12}}\right)} }
 
-Starting with the definitions, compute (according to your actual variant) cross-correlation of the box signal of length 3 with a finite signal \taskonesignal.
+Starting with the definitions, compute (according to your actual variant) cross-correlation of the box signal of length 3 with a finite signal \taskonesignal = \taskonesignalvalue.
 
 \subsection*{Solution}
 
@@ -83,7 +83,7 @@ Start with the definitions.
 
 \newcommandx{\boxsignalvalue}[1][1=n]{\ensuremath{\left( \cdots w_{-1} = 0 \quad \boldsymbol{w_0 = 1} \quad \cdots \quad w_{#1 - 1} = 1 \quad w_{#1} = 0 \cdots \right)} }
 
-\newcommandx{\boxsignalvaluethree}[0][]{\ensuremath{\left( \cdots 0 \quad 0 \quad \boldsymbol{1} \quad 1 \quad 1 \quad 0 \quad 0 \cdots \right)} }
+\newcommandx{\boxsignalvaluethree}[0][]{\ensuremath{\left( \cdots \; 0 \quad 0 \quad \boldsymbol{1} \quad 1 \quad 1 \quad 0 \quad 0 \; \cdots \right)} }
 
 \begin{definition}[Box signal]
   Box signal of length $n > 0$ is a two-side infinite sequence, s. t. all elements are 0, except those starting from the 0-th element until $n - 1$-st element:
@@ -139,8 +139,176 @@ For $n$ outside of range $[-2, 1]$, $c_n = 0$, since the \taskonesignalvalue wil
 
 \begin{equation*}
   \begin{split}
-    c = \boxsignal[3] \star \taskonesignalvalue = (\cdots 0 \quad \frac{\sqrt{5}}{\sqrt{12}} \quad \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} \quad \boldsymbol{\frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}}} \quad \frac{\sqrt{7}}{\sqrt{12}} \quad 0 \cdots)
+    c = \boxsignal[3] \star \taskonesignalvalue = (\cdots \; 0 \quad \frac{\sqrt{5}}{\sqrt{12}} \quad \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} \quad \boldsymbol{\frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}}} \quad \frac{\sqrt{7}}{\sqrt{12}} \quad 0 \; \cdots)
   \end{split}
 \end{equation*}
+
+\section{Task 2}
+
+\subsection*{Problem statement}
+
+\newcommandx{\tasktwosystem}[2][1=(day), 2=(month)]{\ensuremath{#1 A - #2 D} }
+\newcommandx{\tasktwosystemforvariant}[0][]{\tasktwosystem[5][7]}
+
+Let $A$ and $D$ be the \textit{advance} and \textit{delay} operators. Starting with definitions, study linearity of the system
+(according to your actual variant) $T = \tasktwosystem = \tasktwosystemforvariant$, whether the system is causal, memoryless, BIBO-stable, LSI, sketch (draw) its matrix (if possible).
+
+\subsection*{Solution}
+
+\subsubsection*{Definitions}
+
+Start with the definitions.
+
+\begin{definition}[Memoryless linear system]
+  A linear system $T$ is \textit{memoryless} if its matrix is diagonal.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots & \vdots & \vdots & \vdots & \iddots \\
+          \cdots & a^{-1}_{-1} & 0 & 0 & \cdots \\
+          \cdots & 0 & \boldsymbol{a^{0}_{0}} & 0 & \cdots \\
+          \cdots & 0 & 0 & a^{1}_{1} & \cdots \\
+          \iddots & \vdots & \vdots & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Causal linear system]
+  A linear system $T$ is \textit{causal} if its matrix is lower triangular.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots & \vdots & \vdots & \vdots & \iddots \\
+          \cdots & a^{-1}_{-1} & 0 & 0 & \cdots \\
+          \cdots & a^{0}_{-1} & \boldsymbol{a^{0}_{0}} & 0 & \cdots \\
+          \cdots & a^{1}_{-1} & a^{1}_{0} & a^{1}_{1} & \cdots \\
+          \iddots & \vdots & \vdots & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[LSI system (Linear Shift Invariant)]
+  A linear system $T$ is \textit{linear shift invariant} if its matrix consists only of diagonals of some constants.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots             & \vdots & \iddots \\
+          \cdots  & a_{0}  & a_{-1}             & a_{-2} & \cdots \\
+          \cdots  & a_{1}  & \boldsymbol{a_{0}} & a_{-1} & \cdots \\
+          \cdots  & a_{2}  & a_{1}              & a_{0}  & \cdots \\
+          \iddots & \vdots & \vdots             & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Impulse response of a LSI system]
+  \textit{Impulse response $a$} of LSI system $T$ is the sequence obtained by applying $T$ to the Kronecker delta sequence $\delta = \left(\cdots \quad 0 \quad \boldsymbol{1} \quad 0 \quad \cdots\right)$.
+
+  \begin{equation*}
+    a = T \delta = \left( \cdots \quad a_{-1} \quad \boldsymbol{a_{0}} \quad a_{1} \quad \cdots \right)
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[BIBO-stable LSI system (Bounded-Input, Bounded-Output)]
+  An LSI system $T$ is \textit{bounded-input, bounded-output stable} if its impulse response is absolutely summable.
+\end{definition}
+
+\begin{definition}[Advance operator]
+  A linear system $A$ is called an \textit{advance} operator if its matrix has a diagonal of 1-s above the main diagonal and 0-es everywhere else.
+
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the sub index of the operator, e. g. advance by 1 operator is written as
+
+  \begin{equation*}
+    A_{1} = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots         & \vdots & \iddots \\
+          \cdots  & 0      & 1              & 0      & \cdots \\
+          \cdots  & 0      & \boldsymbol{0} & 1      & \cdots \\
+          \cdots  & 0      & 0              & 0      & \cdots \\
+          \iddots & \vdots & \vdots         & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+
+  When an operator is written without the sub index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+\end{definition}
+
+\begin{definition}[Delay operator]
+  A linear system $D$ is called a \textit{delay} operator if its matrix has a diagonal of 1-s below the main diagonal and 0-es everywhere else.
+
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the sub index of the operator, e. g. delay by 1 operator is written as
+
+  \begin{equation*}
+    D_{1} = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots         & \vdots & \iddots \\
+          \cdots  & 0      & 0              & 0      & \cdots \\
+          \cdots  & 1      & \boldsymbol{0} & 0      & \cdots \\
+          \cdots  & 0      & 1              & 0      & \cdots \\
+          \iddots & \vdots & \vdots         & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+
+  When an operator is written without the sub index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+\end{definition}
+
+\subsubsection*{Linearity} \label{sssec:task-two-linearity}
+
+Since, by definition, \textit{advance} and \textit{delay} operators are linear operators, the linear combination $T = \tasktwosystemforvariant$ \textbf{is also a linear operator}.
+
+The system $T$ is of the form:
+
+\begin{itemize}
+  \item a diagonal above the main diagonal consisting only of 5-s
+  \item a diagonal below the main diagonal consisting only of 7-s
+  \item all other elements are 0-s
+\end{itemize}
+
+\subsubsection*{Memorylessness}
+
+Because of the above, it is clear that the $T$ is not a diagonal matrix, so the system is \textbf{not memoryless}.
+
+\subsubsection*{Causality}
+
+$T$ is not represented as a lower triangular matrix, because there are elements above the main diagonal, hence the system is \textbf{not causal}.
+
+\subsubsection*{Linear shift invariance}
+
+Nevertheless, the system \textbf{is LSI}, because it has 2 diagonals of repeating values and 0-es elsewhere.
+
+\subsubsection*{BIBO-stability}
+
+Impulse response of the system is a sequence of all zeroes and 2 numbers 5 and -7, absolute sum of which is 12. Hence, the sequence is absolutely summable and hence \textbf{is BIBO stable}.
+
+\subsection*{Conclusion}
+
+The system has approximately (for more details see \nameref{sssec:task-two-linearity}) the following representation:
+
+\begin{equation*}
+  T = \tasktwosystemforvariant =
+    \begin{pmatrix*}
+      \ddots  & \vdots & \vdots  & \vdots  & \vdots & \iddots \\
+      \cdots  & 0      & \cdots  & 5       & 0      & \cdots \\
+      \cdots  & \vdots & 0       & \iddots & 5      & \cdots \\
+      \cdots  & -7     & \iddots & 0       & \vdots & \cdots \\
+      \cdots  & 0      & -7      & \cdots  & 0      & \cdots \\
+      \iddots & \vdots & \vdots  & \vdots  & \vdots & \ddots
+    \end{pmatrix*}
+\end{equation*}
+
+The system is:
+
+\begin{itemize}
+  \item \textbf{linear}
+  \item \textbf{not memoryless}
+  \item \textbf{not causal}
+  \item \textbf{LSI}
+  \item \textbf{BIBO stable}
+\end{itemize}
+
+\section*{Task 3}
+
+\subsection*{Problem statement}
+
+\subsection*{Solution}
+
+\subsection*{Conclusion}
 
 \end{document}
