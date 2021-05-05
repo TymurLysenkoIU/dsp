@@ -216,10 +216,10 @@ Start with the definitions.
 \begin{definition}[Advance operator]
   A linear system $A$ is called an \textit{advance} operator if its matrix has a diagonal of 1-s above the main diagonal and 0-es everywhere else.
 
-  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the sub index of the operator, e. g. advance by 1 operator is written as
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the super index of the operator, e. g. advance by 1 operator is written as
 
   \begin{equation*}
-    A_{1} = \begin{pmatrix*}
+    A^{1} = \begin{pmatrix*}
           \ddots  & \vdots & \vdots         & \vdots & \iddots \\
           \cdots  & 0      & 1              & 0      & \cdots \\
           \cdots  & 0      & \boldsymbol{0} & 1      & \cdots \\
@@ -228,16 +228,16 @@ Start with the definitions.
         \end{pmatrix*}
   \end{equation*}
 
-  When an operator is written without the sub index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+  When an operator is written without the super index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
 \end{definition}
 
 \begin{definition}[Delay operator]
   A linear system $D$ is called a \textit{delay} operator if its matrix has a diagonal of 1-s below the main diagonal and 0-es everywhere else.
 
-  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the sub index of the operator, e. g. delay by 1 operator is written as
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the super index of the operator, e. g. delay by 1 operator is written as
 
   \begin{equation*}
-    D_{1} = \begin{pmatrix*}
+    D^{1} = \begin{pmatrix*}
           \ddots  & \vdots & \vdots         & \vdots & \iddots \\
           \cdots  & 0      & 0              & 0      & \cdots \\
           \cdots  & 1      & \boldsymbol{0} & 0      & \cdots \\
@@ -246,7 +246,7 @@ Start with the definitions.
         \end{pmatrix*}
   \end{equation*}
 
-  When an operator is written without the sub index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+  When an operator is written without the super index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
 \end{definition}
 
 \subsubsection*{Linearity} \label{sssec:task-two-linearity}
@@ -303,12 +303,87 @@ The system is:
   \item \textbf{BIBO stable}
 \end{itemize}
 
-\section*{Task 3}
+\section{Task 3}
 
 \subsection*{Problem statement}
 
+\newcommandx{\taskthreex}[2][1=-day - month, 2=day-month]{\ensuremath{\left( #1 \quad \boldsymbol{0} \quad #2 \right)}}
+
+\newcommandx{\taskthreexvalue}[0][]{\taskthreex[-12][-2]}
+
+\newcommandx{\taskthreey}[0][]{\ensuremath{\left( 1 \quad 0 \quad \boldsymbol{1} \quad 0 \quad 1 \right)}}
+
+Starting with the definitions, compute (according to the definition) convolution of the following two signals (according to your actual variant)
+
+\begin{itemize}
+  \item $x = \taskthreex = \taskthreexvalue$
+  \item $y = \taskthreey$
+\end{itemize}
+
+Then compute in an efficient way convolution of the following pairs of signals:
+
+\begin{itemize}
+  \item $x$ and $0.5 \cdot D \cdot y$
+  \item $x$ and $\left( 0.5 \cdot D \cdot y + y \right)$
+  \item $A_{2} x$ and $D_{2} y$
+\end{itemize}
+
+(Here $A$ and $D$ are the advance and delay operators. Do not forget to explain the method of your computations and why it is efficient!)
+
 \subsection*{Solution}
 
-\subsection*{Conclusion}
+\subsubsection*{Definitions}
+
+Start with the definitions and theorems.
+
+\begin{definition}[(Linear) convolution ($\ast$)]
+  (Linear) convolution of 2 complex-valued signals $x$ and $y$, denoted as $x \ast y$ is a complex-valued signal, $n$-th element of which is calculated as follows:
+
+  \begin{equation*}
+    \left(x \ast y \right)_{n} = \sum_{k = -\infty} ^{k = +\infty} x_{n - k} y_k = \sum_{k = -\infty} ^{k = +\infty} x_k y_{n - k}
+  \end{equation*}
+\end{definition}
+
+\subsubsection*{Convolution properties}
+
+\begin{property}[Commutativity]
+  \begin{equation*}
+    x \ast y = y \ast x
+  \end{equation*}
+\end{property}
+
+\begin{property}[Linear and shift invariance]
+  Convolution is linear and shift invariant in both arguments.
+
+  \begin{equation*}
+    (a x + b y) \ast z = a (x \ast z) + b (y \ast z)
+  \end{equation*}
+  \begin{equation*}
+    x \ast (a y + b z) = a (x \ast y) + b (x \ast z)
+  \end{equation*}
+\end{property}
+
+\subsubsection*{Calculations}
+
+\begin{equation*}
+  x \ast y = \taskthreexvalue \ast \taskthreey
+\end{equation*}
+
+The lower index of the convolution output signal is -3 and the highest is 3, because otherwise there will not be elements to sum.
+
+\begin{alignat*}{3}
+  (x \ast y)_{-3} &= \taskthreexvalue_{-1} \ast \taskthreey_{-2} &&= (-12 \cdot 1) &&= -12 \\
+  (x \ast y)_{-2} &= \taskthreexvalue_{-1} \ast \taskthreey_{-1} &&&&\\
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{-2} &&= (-12 \cdot 0) + (0 \cdot 1) &&= 0 \\
+  (x \ast y)_{-1} &= \taskthreexvalue_{-1} \ast \taskthreey_{0} + \\ 
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{-1} + &&&& \\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{-2} &&= (-12 \cdot 1) + (0 \cdot 0) + (-2 \cdot 1) &&= -14 \\
+  (x \ast y)_{0} &= \taskthreexvalue_{-1} \ast \taskthreey_{1} + &&&&\\
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{0} &&&&\\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{-1} &&= (-12 \cdot 0) + (0 \cdot 1) + (-2 \cdot 0) &&= 0 \\
+  % TODO: 1
+  % TODO: 2
+  % TODO: 3
+\end{alignat*}
 
 \end{document}
