@@ -1,0 +1,431 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+\usepackage[english]{babel}
+\usepackage[amsmath]{ntheorem}
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTURES: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center class
+
+% Document settings
+
+\setlength{\parskip}{1em}
+
+% Theorems
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{break}
+\theoremheaderfont{\itshape\hspace{-\theoremindent}}
+\theoremindent10pt
+\newtheorem{property}{Property}[section]
+
+% Custom operations
+
+\newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
+
+% \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
+% \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
+
+% \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
+% \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+% \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
+% \newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
+
+% \DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+
+% Title
+
+\title{Digital Signal Processing. Second Midterm}
+\author{Tymur Lysenko}
+\affil{BS18-02SE, Innopolis University}
+\date{Date of Birth: 05.07.1999}
+
+
+% Document
+
+\begin{document}
+
+\maketitle
+
+\section*{Variant}
+
+\begin{flalign*}
+  &day = 5& \\
+  &month = 7& \\
+  &year = 1999& \\
+\end{flalign*}
+
+\section{Task 1}
+
+\subsection*{Problem statement}
+
+\newcommandx{\taskonesignal}[2][1=day, 2=month]{\ensuremath{\left(\frac{\sqrt{#1}}{\sqrt{#1 + #2}}, \frac{\sqrt{#2}}{\sqrt{#1 + #2}}\right)} }
+\newcommandx{\taskonesignalvalue}[0][]{\ensuremath{\left(\frac{\sqrt{5}}{\sqrt{12}}, \frac{\sqrt{7}}{\sqrt{12}}\right)} }
+
+Starting with the definitions, compute (according to your actual variant) cross-correlation of the box signal of length 3 with a finite signal \taskonesignal = \taskonesignalvalue.
+
+\subsection*{Solution}
+
+Start with the definitions.
+
+\newcommandx{\boxsignal}[1][1=n]{\ensuremath{box^{#1}} }
+
+\newcommandx{\boxsignalvalue}[1][1=n]{\ensuremath{\left( \cdots w_{-1} = 0 \quad \boldsymbol{w_0 = 1} \quad \cdots \quad w_{#1 - 1} = 1 \quad w_{#1} = 0 \cdots \right)} }
+
+\newcommandx{\boxsignalvaluethree}[0][]{\ensuremath{\left( \cdots \; 0 \quad 0 \quad \boldsymbol{1} \quad 1 \quad 1 \quad 0 \quad 0 \; \cdots \right)} }
+
+\begin{definition}[Box signal]
+  Box signal of length $n > 0$ is a two-side infinite sequence, s. t. all elements are 0, except those starting from the 0-th element until $n - 1$-st element:
+
+  \begin{equation*}
+    \boxsignal = \boxsignalvalue
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Cross-correlation ($\star$)]
+  Cross-correlation of 2 complex infinite signals $x$ and $y$, denoted as $\star$ (star), is an infinite signal c, $n$-th element of which is calculated as follows:
+
+  \begin{equation*}
+    c_n = (x \star y)_n = \sum_{k = -\infty}^{k = +\infty} x_k^* y_{k + n},
+  \end{equation*}
+
+  where $^*$ is a complex conjugate.
+\end{definition}
+
+Now the cross-correlation can be computed for the task.
+
+\begin{equation*}
+  \begin{split}
+    c = \boxsignal[3] \star \taskonesignalvalue = \boxsignalvaluethree \star \taskonesignalvalue
+  \end{split}
+\end{equation*}
+
+For $n$ outside of range $[-2, 1]$, $c_n = 0$, since the \taskonesignalvalue will be multiplied with 0-s element-wise to calculate the cross-correlation, hence the sum of the products will be 0. It is only left to calculate non-zero elements of the cross-correlation:
+
+\begin{alignat*}{2}
+  \idx{c}[-2]
+    &= \idx{\boxsignal[3]}[2]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[3]^* \cdot \taskonesignalvalue_1 \\
+    &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &0 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+    &= \frac{\sqrt{5}}{\sqrt{12}} && \\
+  \\
+  \idx{c}[-1]
+    &= \idx{\boxsignal[3]}[1]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[2]^* \cdot \taskonesignalvalue_1 \\
+    &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+    &= \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} && \\
+    \\
+    \idx{c}[0]
+      &= \idx{\boxsignal[3]}[0]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[1]^* \cdot \taskonesignalvalue_1 \\
+      &= 1 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+      &= \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} && \\
+    \\
+    \idx{c}[1]
+      &= \idx{\boxsignal[3]}[-1]^* \cdot \taskonesignalvalue_0 &+ &\idx{\boxsignal[3]}[0]^* \cdot \taskonesignalvalue_1 \\
+      &= 0 \cdot \frac{\sqrt{5}}{\sqrt{12}} &+ &1 \cdot \frac{\sqrt{7}}{\sqrt{12}} \\
+      &= \frac{\sqrt{7}}{\sqrt{12}} && \\
+\end{alignat*}
+
+\subsection*{Conclusion}
+
+\begin{equation*}
+  \begin{split}
+    c = \boxsignal[3] \star \taskonesignalvalue = (\cdots \; 0 \quad \frac{\sqrt{5}}{\sqrt{12}} \quad \frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}} \quad \boldsymbol{\frac{\sqrt{5} + \sqrt{7}}{\sqrt{12}}} \quad \frac{\sqrt{7}}{\sqrt{12}} \quad 0 \; \cdots)
+  \end{split}
+\end{equation*}
+
+\section{Task 2}
+
+\subsection*{Problem statement}
+
+\newcommandx{\tasktwosystem}[2][1=(day), 2=(month)]{\ensuremath{#1 A - #2 D} }
+\newcommandx{\tasktwosystemforvariant}[0][]{\tasktwosystem[5][7]}
+
+Let $A$ and $D$ be the \textit{advance} and \textit{delay} operators. Starting with definitions, study linearity of the system
+(according to your actual variant) $T = \tasktwosystem = \tasktwosystemforvariant$, whether the system is causal, memoryless, BIBO-stable, LSI, sketch (draw) its matrix (if possible).
+
+\subsection*{Solution}
+
+\subsubsection*{Definitions}
+
+Start with the definitions.
+
+\begin{definition}[Memoryless linear system]
+  A linear system $T$ is \textit{memoryless} if its matrix is diagonal.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots & \vdots & \vdots & \vdots & \iddots \\
+          \cdots & a^{-1}_{-1} & 0 & 0 & \cdots \\
+          \cdots & 0 & \boldsymbol{a^{0}_{0}} & 0 & \cdots \\
+          \cdots & 0 & 0 & a^{1}_{1} & \cdots \\
+          \iddots & \vdots & \vdots & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Causal linear system]
+  A linear system $T$ is \textit{causal} if its matrix is lower triangular.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots & \vdots & \vdots & \vdots & \iddots \\
+          \cdots & a^{-1}_{-1} & 0 & 0 & \cdots \\
+          \cdots & a^{0}_{-1} & \boldsymbol{a^{0}_{0}} & 0 & \cdots \\
+          \cdots & a^{1}_{-1} & a^{1}_{0} & a^{1}_{1} & \cdots \\
+          \iddots & \vdots & \vdots & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[LSI system (Linear Shift Invariant)]
+  A linear system $T$ is \textit{linear shift invariant} if its matrix consists only of diagonals of some constants.
+
+  \begin{equation*}
+    T = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots             & \vdots & \iddots \\
+          \cdots  & a_{0}  & a_{-1}             & a_{-2} & \cdots \\
+          \cdots  & a_{1}  & \boldsymbol{a_{0}} & a_{-1} & \cdots \\
+          \cdots  & a_{2}  & a_{1}              & a_{0}  & \cdots \\
+          \iddots & \vdots & \vdots             & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Impulse response of a LSI system]
+  \textit{Impulse response $a$} of LSI system $T$ is the sequence obtained by applying $T$ to the Kronecker delta sequence $\delta = \left(\cdots \quad 0 \quad \boldsymbol{1} \quad 0 \quad \cdots\right)$.
+
+  \begin{equation*}
+    a = T \delta = \left( \cdots \quad a_{-1} \quad \boldsymbol{a_{0}} \quad a_{1} \quad \cdots \right)
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[BIBO-stable LSI system (Bounded-Input, Bounded-Output)]
+  An LSI system $T$ is \textit{bounded-input, bounded-output stable} if its impulse response is absolutely summable.
+\end{definition}
+
+\begin{definition}[Advance operator]
+  A linear system $A$ is called an \textit{advance} operator if its matrix has a diagonal of 1-s above the main diagonal and 0-es everywhere else.
+
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the super index of the operator, e. g. advance by 1 operator is written as
+
+  \begin{equation*}
+    A^{1} = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots         & \vdots & \iddots \\
+          \cdots  & 0      & 1              & 0      & \cdots \\
+          \cdots  & 0      & \boldsymbol{0} & 1      & \cdots \\
+          \cdots  & 0      & 0              & 0      & \cdots \\
+          \iddots & \vdots & \vdots         & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+
+  When an operator is written without the super index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+\end{definition}
+
+\begin{definition}[Delay operator]
+  A linear system $D$ is called a \textit{delay} operator if its matrix has a diagonal of 1-s below the main diagonal and 0-es everywhere else.
+
+  The shift degree is determined by the index distance from the central element until the first 1 either horizontally or vertically (the distance is the same) and is indicated in the super index of the operator, e. g. delay by 1 operator is written as
+
+  \begin{equation*}
+    D^{1} = \begin{pmatrix*}
+          \ddots  & \vdots & \vdots         & \vdots & \iddots \\
+          \cdots  & 0      & 0              & 0      & \cdots \\
+          \cdots  & 1      & \boldsymbol{0} & 0      & \cdots \\
+          \cdots  & 0      & 1              & 0      & \cdots \\
+          \iddots & \vdots & \vdots         & \vdots & \ddots
+        \end{pmatrix*}
+  \end{equation*}
+
+  When an operator is written without the super index it means, that the shift degree is not relevant and the statement applies to all positive shift degrees.
+\end{definition}
+
+\subsubsection*{Linearity} \label{sssec:task-two-linearity}
+
+Since, by definition, \textit{advance} and \textit{delay} operators are linear operators, the linear combination $T = \tasktwosystemforvariant$ \textbf{is also a linear operator}.
+
+The system $T$ is of the form:
+
+\begin{itemize}
+  \item a diagonal above the main diagonal consisting only of 5-s
+  \item a diagonal below the main diagonal consisting only of 7-s
+  \item all other elements are 0-s
+\end{itemize}
+
+\subsubsection*{Memorylessness}
+
+Because of the above, it is clear that the $T$ is not a diagonal matrix, so the system is \textbf{not memoryless}.
+
+\subsubsection*{Causality}
+
+$T$ is not represented as a lower triangular matrix, because there are elements above the main diagonal, hence the system is \textbf{not causal}.
+
+\subsubsection*{Linear shift invariance}
+
+Nevertheless, the system \textbf{is LSI}, because it has 2 diagonals of repeating values and 0-es elsewhere.
+
+\subsubsection*{BIBO-stability}
+
+Impulse response of the system is a sequence of all zeroes and 2 numbers 5 and -7, absolute sum of which is 12. Hence, the sequence is absolutely summable and hence \textbf{is BIBO stable}.
+
+\subsection*{Conclusion}
+
+The system has approximately (for more details see \nameref{sssec:task-two-linearity}) the following representation:
+
+\begin{equation*}
+  T = \tasktwosystemforvariant =
+    \begin{pmatrix*}
+      \ddots  & \vdots & \vdots  & \vdots  & \vdots & \iddots \\
+      \cdots  & 0      & \cdots  & 5       & 0      & \cdots \\
+      \cdots  & \vdots & 0       & \iddots & 5      & \cdots \\
+      \cdots  & -7     & \iddots & 0       & \vdots & \cdots \\
+      \cdots  & 0      & -7      & \cdots  & 0      & \cdots \\
+      \iddots & \vdots & \vdots  & \vdots  & \vdots & \ddots
+    \end{pmatrix*}
+\end{equation*}
+
+The system is:
+
+\begin{itemize}
+  \item \textbf{linear}
+  \item \textbf{not memoryless}
+  \item \textbf{not causal}
+  \item \textbf{LSI}
+  \item \textbf{BIBO stable}
+\end{itemize}
+
+\section{Task 3}
+
+\subsection*{Problem statement}
+
+\newcommandx{\taskthreex}[2][1=-day - month, 2=day-month]{\ensuremath{\left( #1 \quad \boldsymbol{0} \quad #2 \right)}}
+
+\newcommandx{\taskthreexvalue}[0][]{\taskthreex[-12][-2]}
+
+\newcommandx{\taskthreey}[0][]{\ensuremath{\left( 1 \quad 0 \quad \boldsymbol{1} \quad 0 \quad 1 \right)}}
+
+Starting with the definitions, compute (according to the definition) convolution of the following two signals (according to your actual variant)
+
+\begin{itemize}
+  \item $x = \taskthreex = \taskthreexvalue$
+  \item $y = \taskthreey$
+\end{itemize}
+
+Then compute in an efficient way convolution of the following pairs of signals:
+
+\begin{itemize}
+  \item $x$ and $0.5 \cdot D \cdot y$
+  \item $x$ and $\left( 0.5 \cdot D \cdot y + y \right)$
+  \item $A^{2} x$ and $D^{2} y$
+\end{itemize}
+
+(Here $A$ and $D$ are the advance and delay operators. Do not forget to explain the method of your computations and why it is efficient!)
+
+\subsection*{Solution}
+
+\subsubsection*{Definitions}
+
+Start with the definitions and theorems.
+
+\begin{definition}[(Linear) convolution ($\ast$)]
+  (Linear) convolution of 2 complex-valued signals $x$ and $y$, denoted as $x \ast y$ is a complex-valued signal, $n$-th element of which is calculated as follows:
+
+  \begin{equation*}
+    \left(x \ast y \right)_{n} = \sum_{k = -\infty} ^{k = +\infty} x_{n - k} y_k = \sum_{k = -\infty} ^{k = +\infty} x_k y_{n - k}
+  \end{equation*}
+\end{definition}
+
+\subsubsection*{Convolution properties}
+
+\begin{property}[Commutativity]
+  \begin{equation*}
+    x \ast y = y \ast x
+  \end{equation*}
+\end{property}
+
+\begin{property}[Linear and shift invariance]
+  Convolution is linear and shift invariant in both arguments.
+
+  \begin{equation*}
+    (a x + b y) \ast z = a (x \ast z) + b (y \ast z)
+  \end{equation*}
+  \begin{equation*}
+    x \ast (a y + b z) = a (x \ast y) + b (x \ast z)
+  \end{equation*}
+\end{property}
+
+\subsubsection*{Convolution of signals x and y}
+
+\begin{equation*}
+  x \ast y = \taskthreexvalue \ast \taskthreey
+\end{equation*}
+
+The lower index of the convolution output signal is -3 and the highest is 3, because otherwise there will not be elements to sum.
+
+\begin{alignat*}{3}
+  (x \ast y)_{-3} &= \taskthreexvalue_{-1} \ast \taskthreey_{-2} &&= (-12 \cdot 1) &&= -12 \\
+  (x \ast y)_{-2} &= \taskthreexvalue_{-1} \ast \taskthreey_{-1} &&&&\\
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{-2} &&= (-12 \cdot 0) + (0 \cdot 1) &&= 0 \\
+  (x \ast y)_{-1} &= \taskthreexvalue_{-1} \ast \taskthreey_{0} + \\ 
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{-1} + &&&& \\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{-2} &&= (-12 \cdot 1) + (0 \cdot 0) + (-2 \cdot 1) &&= -14 \\
+  (x \ast y)_{0} &= \taskthreexvalue_{-1} \ast \taskthreey_{1} + &&&&\\
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{0} &&&&\\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{-1} &&= (-12 \cdot 0) + (0 \cdot 1) + (-2 \cdot 0) &&= 0 \\
+  (x \ast y)_{1} &= \taskthreexvalue_{-1} \ast \taskthreey_{2} + \\ 
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{1} + &&&& \\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{0} &&= (-12 \cdot 1) + (0 \cdot 0) + (-2 \cdot 1) &&= -14 \\
+  (x \ast y)_{2} &= \taskthreexvalue_{0} \ast \taskthreey_{2} &&&&\\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{1} &&= (0 \cdot 1) + (-2 \cdot 0) &&= 0 \\
+  (x \ast y)_{3} &= \taskthreexvalue_{1} \ast \taskthreey_{2} &&= (-2 \cdot 1) &&= -2 \\
+\end{alignat*}
+
+The result of the convolution is:
+
+\begin{equation*}
+  x \ast y = \left( -12 \quad 0 \quad -14 \quad \boldsymbol{0} \quad -14 \quad 0 \quad -2 \right)
+\end{equation*}
+
+\subsubsection*{$x \ast 0.5 \cdot D \cdot y$}
+
+\begin{equation*}
+  \begin{split}
+    x \ast 0.5 \cdot D \cdot y &= \taskthreexvalue \ast \left( 0.5 \quad 0.5 \quad \boldsymbol{0} \quad 0.5 \quad 0 \right) \\
+      &= 0.5 \cdot D \cdot (x \ast y) \\
+      &= \left( -1 \quad -6 \quad 0 \quad \boldsymbol{-7} \quad 0 \quad -7 \quad 0 \right)
+  \end{split}
+\end{equation*}
+
+\subsubsection*{$x \ast (0.5 \cdot D \cdot y + y)$}
+
+\begin{equation*}
+  \begin{split}
+    x \ast (0.5 \cdot D \cdot y + y) &= x \ast 1.5 \cdot D \cdot y = \taskthreexvalue \ast \left( 1.5 \quad 1.5 \quad \boldsymbol{0} \quad 1.5 \quad 0 \right) \\
+      &= 1.5 \cdot D \cdot (x \ast y) \\
+      &= \left( -3 \quad -18 \quad 0 \quad \boldsymbol{-21} \quad 0 \quad -21 \quad 0 \right)
+  \end{split}
+\end{equation*}
+
+\subsubsection*{$A^{2} x \ast D^{2} y$}
+
+\begin{equation*}
+  \begin{split}
+    A^{2} x \ast D^{2} y &= A^{2} D^{2} (x \ast y) = x \ast y \\
+      &= \left( -12 \quad 0 \quad -14 \quad \boldsymbol{0} \quad -14 \quad 0 \quad -2 \right)
+  \end{split}
+\end{equation*}
+
+\subsection*{Conclusion}
+
+Linearity of convolutions enables to facilitate further calulations of convolution when linear operations are applied to the operands.
+
+\end{document}
