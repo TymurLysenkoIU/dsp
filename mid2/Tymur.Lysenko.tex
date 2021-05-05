@@ -325,7 +325,7 @@ Then compute in an efficient way convolution of the following pairs of signals:
 \begin{itemize}
   \item $x$ and $0.5 \cdot D \cdot y$
   \item $x$ and $\left( 0.5 \cdot D \cdot y + y \right)$
-  \item $A_{2} x$ and $D_{2} y$
+  \item $A^{2} x$ and $D^{2} y$
 \end{itemize}
 
 (Here $A$ and $D$ are the advance and delay operators. Do not forget to explain the method of your computations and why it is efficient!)
@@ -363,7 +363,7 @@ Start with the definitions and theorems.
   \end{equation*}
 \end{property}
 
-\subsubsection*{Calculations}
+\subsubsection*{Convolution of signals x and y}
 
 \begin{equation*}
   x \ast y = \taskthreexvalue \ast \taskthreey
@@ -381,9 +381,51 @@ The lower index of the convolution output signal is -3 and the highest is 3, bec
   (x \ast y)_{0} &= \taskthreexvalue_{-1} \ast \taskthreey_{1} + &&&&\\
     &+ \taskthreexvalue_{0} \ast \taskthreey_{0} &&&&\\
     &+ \taskthreexvalue_{1} \ast \taskthreey_{-1} &&= (-12 \cdot 0) + (0 \cdot 1) + (-2 \cdot 0) &&= 0 \\
-  % TODO: 1
-  % TODO: 2
-  % TODO: 3
+  (x \ast y)_{1} &= \taskthreexvalue_{-1} \ast \taskthreey_{2} + \\ 
+    &+ \taskthreexvalue_{0} \ast \taskthreey_{1} + &&&& \\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{0} &&= (-12 \cdot 1) + (0 \cdot 0) + (-2 \cdot 1) &&= -14 \\
+  (x \ast y)_{2} &= \taskthreexvalue_{0} \ast \taskthreey_{2} &&&&\\
+    &+ \taskthreexvalue_{1} \ast \taskthreey_{1} &&= (0 \cdot 1) + (-2 \cdot 0) &&= 0 \\
+  (x \ast y)_{3} &= \taskthreexvalue_{1} \ast \taskthreey_{2} &&= (-2 \cdot 1) &&= -2 \\
 \end{alignat*}
+
+The result of the convolution is:
+
+\begin{equation*}
+  x \ast y = \left( -12 \quad 0 \quad -14 \quad \boldsymbol{0} \quad -14 \quad 0 \quad -2 \right)
+\end{equation*}
+
+\subsubsection*{$x \ast 0.5 \cdot D \cdot y$}
+
+\begin{equation*}
+  \begin{split}
+    x \ast 0.5 \cdot D \cdot y &= \taskthreexvalue \ast \left( 0.5 \quad 0.5 \quad \boldsymbol{0} \quad 0.5 \quad 0 \right) \\
+      &= 0.5 \cdot D \cdot (x \ast y) \\
+      &= \left( -1 \quad -6 \quad 0 \quad \boldsymbol{-7} \quad 0 \quad -7 \quad 0 \right)
+  \end{split}
+\end{equation*}
+
+\subsubsection*{$x \ast (0.5 \cdot D \cdot y + y)$}
+
+\begin{equation*}
+  \begin{split}
+    x \ast (0.5 \cdot D \cdot y + y) &= x \ast 1.5 \cdot D \cdot y = \taskthreexvalue \ast \left( 1.5 \quad 1.5 \quad \boldsymbol{0} \quad 1.5 \quad 0 \right) \\
+      &= 1.5 \cdot D \cdot (x \ast y) \\
+      &= \left( -3 \quad -18 \quad 0 \quad \boldsymbol{-21} \quad 0 \quad -21 \quad 0 \right)
+  \end{split}
+\end{equation*}
+
+\subsubsection*{$A^{2} x \ast D^{2} y$}
+
+\begin{equation*}
+  \begin{split}
+    A^{2} x \ast D^{2} y &= A^{2} D^{2} (x \ast y) = x \ast y \\
+      &= \left( -12 \quad 0 \quad -14 \quad \boldsymbol{0} \quad -14 \quad 0 \quad -2 \right)
+  \end{split}
+\end{equation*}
+
+\subsection*{Conclusion}
+
+Linearity of convolutions enables to facilitate further calulations of convolution when linear operations are applied to the operands.
 
 \end{document}
