@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  jupyter-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: dsp-jupyter
+    ports:
+      - '8888:8888'
+    volumes:
+      - ../:/home/jovyan/work/
