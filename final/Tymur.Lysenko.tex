@@ -1,0 +1,113 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+\usepackage[english]{babel}
+\usepackage[amsmath]{ntheorem}
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTURES: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center class
+
+% Document settings
+
+\setlength{\parskip}{1em}
+
+% Theorems
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{break}
+\theoremheaderfont{\itshape\hspace{-\theoremindent}}
+\theoremindent10pt
+\newtheorem{property}{Property}[section]
+
+% Custom operations
+
+\newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
+
+% \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
+% \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
+
+% \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
+% \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+% \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
+% \newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
+
+% \DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+
+% Title
+
+\title{Digital Signal Processing. Final}
+\author{Tymur Lysenko}
+\affil{BS18-02SE, Innopolis University}
+\date{Date of Birth: 05.07.1999}
+
+
+% Document
+
+\begin{document}
+
+\maketitle
+
+\section*{Variant}
+
+\begin{flalign*}
+  &day = 5& \\
+  &month = 7& \\
+  &year = 1999& \\
+\end{flalign*}
+
+\section{Task 1}
+
+\subsection*{Problem statement}
+
+Design (according to your actual variant) a filter to process signals with a period of length $m = year = 1999$ that passes (without any change) frequencies $\frac{2 k \pi}{m} = \frac{2 k \pi}{1999}$ for all $k \in [0 \dotsc (m - 1)]$ (namely, $k \in [0 \dotsc 1998]$) but $k = day = 5$ and $k = month = 7$. Explain the design algorithms and all design steps (providing references to the properties justifying the steps)!
+
+\subsection*{Solution}
+
+\subsubsection*{Plan}
+
+In order to cancel out frequencies $\frac{2 \cdot 5 \cdot \pi}{1999} = \frac{10 \cdot \pi}{1999}$ and $\frac{2 \cdot 7 \cdot \pi}{1999} = \frac{14 \cdot \pi}{1999}$ 2 \textit{band-stop} filters must be designed (for both frequencies) for these frequencies, summed together (because of the linearity of DTFT) and applied to the signal.
+
+\subsubsection*{Filter design to cancel frequency $\frac{10 \cdot \pi}{1999}$}
+
+% TODO: Looks like DFT needs to be used instead of DTFT
+% \begin{equation*}
+%   X(e^{j\omega}) = \begin{cases}
+%                      0, \, \omega = \pm \frac{14 \cdot \pi}{1999} \\
+%                      1, \, \omega \neq \pm \frac{14 \cdot \pi}{1999}
+%                    \end{cases}
+% \end{equation*}
+
+\subsubsection*{Filter design to cancel frequency $\frac{14 \cdot \pi}{1999}$}
+
+
+\subsection*{Conclusion}
+
+% TODO
+
+\clearpage % TODO: remove
+\section{Task 2}
+
+\subsection*{Problem statement}
+
+Design (according to your actual variant) an ideal low-pass filter to process infinite discrete signals that passes (without any change) only frequencies in range $\left[ -\frac{day}{year}, + \frac{month}{year} \right] = \left[ -\frac{5}{1999}, + \frac{7}{1999} \right]$. Explain the design algorithms and all design steps (providing references to the properties justifying the steps)!
+
+\subsection*{Solution}
+
+% TODO
+
+\subsection*{Conclusion}
+
+% TODO
+
+\end{document}
