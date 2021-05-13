@@ -32,6 +32,7 @@
 % Custom operations
 
 \newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
 % \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
 % \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
@@ -76,26 +77,36 @@ Design (according to your actual variant) a filter to process signals with a per
 
 \subsubsection*{Plan}
 
-In order to cancel out frequencies $\frac{2 \cdot 5 \cdot \pi}{1999} = \frac{10 \cdot \pi}{1999}$ and $\frac{2 \cdot 7 \cdot \pi}{1999} = \frac{14 \cdot \pi}{1999}$ 2 \textit{band-stop} filters must be designed (for both frequencies) for these frequencies, summed together (because of the linearity of DTFT) and applied to the signal.
+It is known that convolution of 2 signals in time domain is pointwise product in the frequency domain. Thus, in order to come up with a filter that will cancel particular frequancies, it is sufficient to come up with a funciton in frequency domain such that it will leave needed frequencies as they are (i. e. the filter must have amplitude of 1 for such frequencies) and zero out the other frequencies (i. e. the filter must have 0-es for these frequencies). After defining such filter in frequency domain inverse discrete Fourier transform must be applied to obtain the filter in time domain.
 
-\subsubsection*{Filter design to cancel frequency $\frac{10 \cdot \pi}{1999}$}
+\subsubsection*{Define frequency response for the filter}
 
-% TODO: Looks like DFT needs to be used instead of DTFT
-% \begin{equation*}
-%   X(e^{j\omega}) = \begin{cases}
-%                      0, \, \omega = \pm \frac{14 \cdot \pi}{1999} \\
-%                      1, \, \omega \neq \pm \frac{14 \cdot \pi}{1999}
-%                    \end{cases}
-% \end{equation*}
+In the frequency domain, the filter in question must cancel out the frequencies that correspond to frequency idexes 5 and 7.
 
-\subsubsection*{Filter design to cancel frequency $\frac{14 \cdot \pi}{1999}$}
+\begin{equation*}
+  X_k = \begin{cases}
+          0, \, k \in \left\{ 5, 7 \right\} \\
+          1, \, k \in [0, 4] \cup \left\{ 6 \right\} \cup [8, 1998]
+        \end{cases}
+\end{equation*}
 
+\subsubsection*{Find impulse response from frequency response}
+
+To find the filter's impulse response one must apply inverse discrete Fourier transform to $X_k$:
+
+\begin{equation*}
+  \begin{split}
+    x_n &= \frac{1}{1999} \sum_{k=0}^{1998} X_k e^{j \frac{2 \pi }{1999} k n} \\
+        &= \frac{1}{1999} \sum_{k=0}^{4} e^{j \frac{2 \pi }{1999} k n} + \frac{1}{1999} \cdot e^{j \frac{12 \pi }{1999} n} + \frac{1}{1999} \sum_{k=8}^{1998} e^{j \frac{2 \pi }{1999} k n} \\
+        &= \frac{1}{1999} \cdot \left( \frac{1 - e^{j \frac{10 \pi}{1999} n}}{1 - e^{j \frac{2 \pi}{1999} n}} + e^{j \frac{2 \pi}{1999} n} + \frac{1 - e^{j \frac{3982 \pi}{1999} n}}{1 - e^{j \frac{2 \pi}{1999} n}} \right)
+  \end{split}
+\end{equation*}
 
 \subsection*{Conclusion}
 
-% TODO
+The property of convolution in time domain being a pointwise multiplication in frequency domain enable to easily design a filter that cancels certain frequencies for an input signal.
 
-\clearpage % TODO: remove
+\clearpage
 \section{Task 2}
 
 \subsection*{Problem statement}
@@ -104,7 +115,7 @@ Design (according to your actual variant) an ideal low-pass filter to process in
 
 \subsection*{Solution}
 
-% TODO
+\subsubsection*{Plan}
 
 \subsection*{Conclusion}
 
