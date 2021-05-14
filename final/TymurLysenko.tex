@@ -100,7 +100,7 @@ It is known that convolution of 2 signals in time domain is pointwise product in
 
 \subsubsection*{Define frequency response for the filter}
 
-In the frequency domain, the filter in question must cancel out the frequencies that correspond to frequency idexes 5 and 7.
+In the frequency domain, the filter in question must cancel out the frequencies that correspond to frequency indexes 5 and 7.
 
 \begin{equation*}
   X_k = \begin{cases}
@@ -209,12 +209,12 @@ For this solution the second approach is chosen.
 
 The cases of the $X(e^{j \omega})$ above represent a low-pass filter, hence by definition \ref{def:low_pass}, property \ref{prop:dtft_lin} and \ref{prop:dtft_freq_shift} its impulse response is:
 
-\begin{equation*}
+\begin{equation} \label{eq_t2:x_n}
   \begin{split}
-    x_n &= \sqrt{\frac{5}{3998 \pi}} \cdot e^{j \frac{5}{1999} n} \cdot \sqrt{\frac{\frac{5}{1999}}{2 \pi}} \sinc \left( \frac{\frac{5}{1999} n} {2} \right) \\
-        &= \frac{5}{3998 \pi} \cdot e^{j \frac{5}{1999} n} \cdot \sinc \left( \frac{\frac{5}{1999} n} {2} \right)
+    x_n &= \sqrt{\frac{5}{3998 \pi}} \cdot e^{-j \frac{5}{3998} n} \cdot \sqrt{\frac{\frac{5}{1999}}{2 \pi}} \sinc \left( \frac{\frac{5}{1999} n} {2} \right) \\
+        &= \frac{5}{3998 \pi} \cdot e^{-j \frac{5}{3998} n} \cdot \sinc \left( \frac{5}{3998} n \right)
   \end{split}
-\end{equation*}
+\end{equation}
 
 \subsubsection*{Define frequency response for filter to pass frequencies in $\left( 0; \; +\frac{7}{1999} \right]$}
 
@@ -224,24 +224,46 @@ The cases of the $X(e^{j \omega})$ above represent a low-pass filter, hence by d
                          1, \, 0 < \omega \leq \frac{7}{1999} \\
                          0, \, \text{otherwise}
                        \end{cases} \\
-                    %  TODO
-                    % &= \begin{cases}
-                    %      1, \, 0 < \omega \leq \frac{7}{1999} \\
-                    %      0, \, \text{otherwise}
-                    %    \end{cases}
+                    &= \begin{cases}
+                         1, \, 0 - \frac{7}{2 \cdot 1999} < \omega - \frac{7}{2 \cdot 1999} \leq \frac{7}{1999} - \frac{7}{2 \cdot 1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \begin{cases}
+                         1, \, - \frac{1}{2} \cdot \frac{7}{1999} < \omega - \frac{1}{2} \cdot \frac{7}{1999} \leq \frac{1}{2} \cdot \frac{7}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \sqrt{\frac{7}{3998 \pi}} \cdot
+                       \begin{cases}
+                         \sqrt{\frac{2 \pi}{\frac{7}{1999}}}, \, - \frac{1}{2} \cdot \frac{7}{1999} < \omega - \frac{1}{2} \cdot \frac{7}{1999} \leq \frac{1}{2} \cdot \frac{7}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases}
   \end{split}
 \end{equation*}
 
 \subsubsection*{Find impulse response from frequency response}
 
-% TODO
+The cases of the $Y(e^{j \omega})$ above represent a low-pass filter, hence by definition \ref{def:low_pass}, property \ref{prop:dtft_lin} and \ref{prop:dtft_freq_shift} its impulse response is:
+
+\begin{equation} \label{eq_t2:y_n}
+  \begin{split}
+    y_n &= \sqrt{\frac{7}{3998 \pi}} \cdot e^{j \frac{7}{3998} n} \cdot \sqrt{\frac{\frac{7}{1999}}{2 \pi}} \sinc \left( \frac{\frac{7}{1999} n} {2} \right) \\
+        &= \frac{7}{3998 \pi} \cdot e^{j \frac{7}{3998} n} \cdot \sinc \left( \frac{7}{3998} n \right)
+  \end{split}
+\end{equation}
 
 \subsubsection*{Combine filters to get the final filter}
 
-% TODO
+Because of \hyperref[prop:dtft_lin]{DTFT linearity}, the obtained filters in time domain can be summed together to obtain a filter that leaves only frequencies in range $\left[ -\frac{5}{1999}, + \frac{7}{1999} \right]$:
+
+\begin{equation*}
+  \begin{split}
+    z_n &= \eqref{eq_t2:x_n} + \eqref{eq_t2:y_n} = x_n + y_n \\
+        &= \frac{5}{3998 \pi} \cdot e^{-j \frac{5}{3998} n} \cdot \sinc \left( \frac{5}{3998} n \right) + \frac{7}{3998 \pi} \cdot e^{j \frac{7}{3998} n} \cdot \sinc \left( \frac{7}{3998} n \right)
+  \end{split}
+\end{equation*}
 
 \subsection*{Conclusion}
 
-% TODO
+Precomputed DTF transforms for common filters, \hyperref[prop:dtft_lin]{DTFT linearity}, \hyperref[prop:dtft_freq_shift]{DTFT shift in frequency} and other properties of DTFT enable to easily construct new filters without the need to evaluate complex integrals.
 
 \end{document}
