@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=2cm]{geometry}
 \usepackage[hidelinks]{hyperref}
-\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots,extarrows}
 \usepackage[T1]{fontenc}
 \usepackage[affil-it]{authblk}
 \usepackage[english]{babel}
@@ -34,6 +34,8 @@
 \newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
+\DeclareMathOperator{\sinc}{sinc}
+
 % \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
 % \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
 
@@ -41,8 +43,6 @@
 % \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
 % \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
 % \newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
-
-% \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
 
 % Title
@@ -82,6 +82,8 @@ It is known that convolution of 2 signals in time domain is pointwise product in
 \subsubsection*{Equations to be used}
 
 \begin{definition}[Inverse discrete Fourier transform (IDFT)] \label{def:idft}
+  Inverse discrete Fourier transform of a frequency response $X$ is defined as:
+
   \begin{equation} \label{eq:idft}
     x_n = \frac{1}{N} \sum_{k=0}^{N - 1} X_k e^{j \frac{2 \pi }{N} k n}m,
   \end{equation}
@@ -142,13 +144,45 @@ For this solution the second approach is chosen.
 
 \subsubsection*{Equations to be used}
 
-% TODO: linearity of DTFT (slide 30)
-% TODO: phase shift DTFT (slide 30)
-% TODO: lowpass filter DTFT and IDTFT (slide 26)
+% \begin{definition}[Inverse discrete time Fourier transform (IDTFT)] \label{def:idtft}
+%   Inverse discrete time Fourier transform of a frequency response $X$ on an interval $\left[-\pi; \; \pi\right]$ is defined as:
+
+%   \begin{equation} \label{eq:idtft}
+%     x_n = \frac{1}{2 \pi} \int_{-\pi}^{\pi} X(e^{j \omega}) e^{j \omega n} d\omega,
+%   \end{equation}
+% \end{definition}
+
+\begin{definition}[Low-pass filter] \label{def:low_pass}
+  Low-pass filter with \textit{cutoff} frequency $\frac{\omega_0}{2}$ is defined in time and frequency domain as follows:
+
+  \begin{equation} \label{eq:low_pass}
+    \sqrt{\frac{\omega_0}{2 \pi}} \sinc \left( \frac{\omega_0 n} {2} \right)
+    \xlongleftrightarrow{DTFT}
+    \begin{cases}
+      \sqrt{\frac{2 \pi}{\omega_0}}, \, \abs{\omega} \leq \frac{\omega_0}{2} \\
+      0, \text{otherwise}
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+\begin{property}[Linearity of DTFT] \label{prop:dtft_lin}
+  \begin{equation} \label{eq:dtft_lin}
+    \alpha x_n + \beta y_n 
+    \xlongleftrightarrow{DTFT}
+    \alpha X \left( e^{j \omega} \right) + \beta Y \left( e^{j \omega} \right)
+  \end{equation}
+\end{property}
+
+\begin{property}[DTFT shift in frequency] \label{prop:dtft_freq_shift}
+  \begin{equation} \label{eq:dtft_freq_shift}
+    e^{j \omega_0 n} x_n
+    \xlongleftrightarrow{DTFT}
+    X\left( e^{j (w - w_0)} \right)
+  \end{equation}
+\end{property}
 
 \subsubsection*{Define frequency response for filter to pass requencies in $\left[ -\frac{5}{1999}; 0 \right]$}
 
-% TODO
 \begin{equation*}
   \begin{split}
     X(e^{j \omega}) &= \begin{cases}
@@ -160,7 +194,7 @@ For this solution the second approach is chosen.
                          0, \, \text{otherwise}
                        \end{cases} \\
                     &= \begin{cases}
-                         1, \, -\frac{5}{3998} \leq \omega + \frac{5}{3998} \leq \frac{5}{3998} \\
+                         1, \, - \frac{1}{2} \cdot \frac{5}{1999} \leq \omega + \frac{5}{3998} \leq \frac{1}{2} \cdot \frac{5}{1999} \\
                          0, \, \text{otherwise}
                        \end{cases}
   \end{split}
