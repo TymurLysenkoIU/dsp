@@ -1,0 +1,269 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp,fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,graphicx,indentfirst,xargs,mathtools,mathdots,extarrows}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+\usepackage[english]{babel}
+\usepackage[amsmath]{ntheorem}
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTURES: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center class
+
+% Document settings
+
+\setlength{\parskip}{1em}
+
+% Theorems
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{break}
+\theoremheaderfont{\itshape\hspace{-\theoremindent}}
+\theoremindent10pt
+\newtheorem{property}{Property}[section]
+
+% Custom operations
+
+\newcommandx{\idx}[2][2=n]{\ensuremath{\left(#1\right)_{#2}} }
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+\DeclareMathOperator{\sinc}{sinc}
+
+% \newcommandx{\innerp}[2][1=\_, 2=\_]{\ensuremath{\langle#1, #2\rangle} }
+% \newcommandx{\taskop}[2][1=\_, 2=\_]{\ensuremath{(#1 | #2)} }
+
+% \newcommandx{\W}[2][1=kn, 2=m]{\ensuremath{W_{#2}^{#1}} }
+% \newcommandx{\Wval}[2][1=kn, 2=m]{\ensuremath{e^{-\frac{2 \cdot j \cdot \pi \cdot #1 }{#2}}} }
+% \newcommandx{\Wvalcoef}[2][1=2kn, 2=m]{\ensuremath{e^{-\frac{#1 \cdot j \cdot \pi }{#2}}} }
+% \newcommandx{\eulersvalue}[2][1=x, 2=+]{\ensuremath{\cos(#1) #2 j\sin(#1)} }
+
+
+% Title
+
+\title{Digital Signal Processing. Final}
+\author{Tymur Lysenko}
+\affil{BS18-02SE, Innopolis University}
+\date{Date of Birth: 05.07.1999}
+
+
+% Document
+
+\begin{document}
+
+\maketitle
+
+\section*{Variant}
+
+\begin{flalign*}
+  &day = 5& \\
+  &month = 7& \\
+  &year = 1999& \\
+\end{flalign*}
+
+\section{Task 1}
+
+\subsection*{Problem statement}
+
+Design (according to your actual variant) a filter to process signals with a period of length $m = year = 1999$ that passes (without any change) frequencies $\frac{2 k \pi}{m} = \frac{2 k \pi}{1999}$ for all $k \in [0 \dotsc (m - 1)]$ (namely, $k \in [0 \dotsc 1998]$) but $k = day = 5$ and $k = month = 7$. Explain the design algorithms and all design steps (providing references to the properties justifying the steps)!
+
+\subsection*{Solution}
+
+\subsubsection*{Plan} \label{subsub:task_1_plan}
+
+It is known that convolution of 2 signals in time domain is pointwise product in the frequency domain. Thus, in order to come up with a filter that will cancel particular frequencies, it is sufficient to come up with a function in frequency domain such that it will leave needed frequencies as they are (i. e. the filter must have amplitude of 1 for such frequencies) and zero out the other frequencies (i. e. the filter must have 0-es for these frequencies). After defining such filter in frequency domain inverse discrete Fourier transform must be applied to obtain the filter in time domain.
+
+\subsubsection*{Equations to be used}
+
+\begin{definition}[Inverse discrete Fourier transform (IDFT)] \label{def:idft}
+  Inverse discrete Fourier transform of a frequency response $X$ is defined as:
+
+  \begin{equation} \label{eq:idft}
+    x_n = \frac{1}{N} \sum_{k=0}^{N - 1} X_k e^{j \frac{2 \pi }{N} k n}m,
+  \end{equation}
+
+  where $N$ is length of vector $X$ (which if DFT of $x$ of the same length).
+\end{definition}
+
+\begin{property}[Sum of geometric series]
+  For a geometric series $a_{n} = a r^{n - 1}$, where $r \neq 1$, its sum from 0 up to $n$ is
+  \begin{equation} \label{eq:geom_sum}
+    \sum_{k=0}^{n} a r^{k} = \frac{a \cdot \left( 1 - r^{n + 1} \right)}{1 - r}
+  \end{equation}
+\end{property}
+
+\subsubsection*{Define frequency response for the filter}
+
+In the frequency domain, the filter in question must cancel out the frequencies that correspond to frequency indexes 5 and 7.
+
+\begin{equation*}
+  X_k = \begin{cases}
+          0, \, k \in \left\{ 5, 7 \right\} \\
+          1, \, k \in [0, 4] \cup \left\{ 6 \right\} \cup [8, 1998]
+        \end{cases}
+\end{equation*}
+
+\subsubsection*{Find impulse response from frequency response}
+
+To find the filter impulse response one must apply inverse discrete Fourier transform (\ref{def:idft}) to $X_k$:
+
+\begin{equation*}
+  \begin{split}
+    x_n &\stackrel{\text{\eqref{eq:idft}}}{=} \frac{1}{1999} \sum_{k=0}^{1998} X_k e^{j \frac{2 \pi }{1999} k n} \\
+        &= \frac{1}{1999} \sum_{k=0}^{4} e^{j \frac{2 \pi }{1999} k n} + \frac{1}{1999} \cdot e^{j \frac{12 \pi }{1999} n} + \frac{1}{1999} \sum_{k=8}^{1998} e^{j \frac{2 \pi }{1999} k n} \\
+        &\stackrel{\text{\eqref{eq:geom_sum}}}{=} \frac{1}{1999} \cdot \left( \frac{1 - e^{j \frac{10 \pi}{1999} n}}{1 - e^{j \frac{2 \pi}{1999} n}} + e^{j \frac{2 \pi}{1999} n} + \frac{1 - e^{j \frac{3982 \pi}{1999} n}}{1 - e^{j \frac{2 \pi}{1999} n}} \right)
+  \end{split}
+\end{equation*}
+
+\subsection*{Conclusion}
+
+The property of convolution in time domain being a pointwise multiplication in frequency domain enable to easily design a filter that cancels certain frequencies for an input signal.
+
+\clearpage
+\section{Task 2}
+
+\subsection*{Problem statement}
+
+Design (according to your actual variant) an ideal low-pass filter to process infinite discrete signals that passes (without any change) only frequencies in range $\left[ -\frac{day}{year}, + \frac{month}{year} \right] = \left[ -\frac{5}{1999}, + \frac{7}{1999} \right]$. Explain the design algorithms and all design steps (providing references to the properties justifying the steps)!
+
+\subsection*{Solution}
+
+\subsubsection*{Plan}
+
+The idea of filter design here is the same as in \hyperref[subsub:task_1_plan]{plan for task 1}, except that now we have to deal with infinite signal, so the filter frequency response is a continuous function and inverse discrete time Fourier transform (IDTFT) must be used instead of inverse discrete Fourier transform to find filter in time domain. Also, the frequency domain is in range $\left[ -\pi; + \pi \right]$ with the period of $2 \pi$.
+
+In this case, there are 2 approachers to find filter impulse response: evaluate the integral for IDTFT or design 2 separate filters, express them in terms of low-pass filters, for which the IDTFT is known and add their impulse response to produce the final filter (we can do so because of the linearity of DTFT).
+
+For this solution the second approach is chosen.
+
+\subsubsection*{Equations to be used}
+
+% \begin{definition}[Inverse discrete time Fourier transform (IDTFT)] \label{def:idtft}
+%   Inverse discrete time Fourier transform of a frequency response $X$ on an interval $\left[-\pi; \; \pi\right]$ is defined as:
+
+%   \begin{equation} \label{eq:idtft}
+%     x_n = \frac{1}{2 \pi} \int_{-\pi}^{\pi} X(e^{j \omega}) e^{j \omega n} d\omega,
+%   \end{equation}
+% \end{definition}
+
+\begin{definition}[Low-pass filter] \label{def:low_pass}
+  Low-pass filter with \textit{cutoff} frequency $\frac{\omega_0}{2}$ is defined in time and frequency domain as follows:
+
+  \begin{equation} \label{eq:low_pass}
+    \sqrt{\frac{\omega_0}{2 \pi}} \sinc \left( \frac{\omega_0 n} {2} \right)
+    \xlongleftrightarrow{DTFT}
+    \begin{cases}
+      \sqrt{\frac{2 \pi}{\omega_0}}, \, \abs{\omega} \leq \frac{\omega_0}{2} \\
+      0, \text{otherwise}
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+\begin{property}[Linearity of DTFT] \label{prop:dtft_lin}
+  \begin{equation} \label{eq:dtft_lin}
+    \alpha x_n + \beta y_n 
+    \xlongleftrightarrow{DTFT}
+    \alpha X \left( e^{j \omega} \right) + \beta Y \left( e^{j \omega} \right)
+  \end{equation}
+\end{property}
+
+\begin{property}[DTFT shift in frequency] \label{prop:dtft_freq_shift}
+  \begin{equation} \label{eq:dtft_freq_shift}
+    e^{j \omega_0 n} x_n
+    \xlongleftrightarrow{DTFT}
+    X\left( e^{j (w - w_0)} \right)
+  \end{equation}
+\end{property}
+
+\subsubsection*{Define frequency response for filter to pass frequencies in $\left[ -\frac{5}{1999}; \; 0 \right]$}
+
+\begin{equation*}
+  \begin{split}
+    X(e^{j \omega}) &= \begin{cases}
+                         1, \, -\frac{5}{1999} \leq \omega \leq 0 \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \begin{cases}
+                         1, \, -\frac{5}{1999} + \frac{5}{2 \cdot 1999} \leq \omega + \frac{5}{2 \cdot 1999} \leq 0 + \frac{5}{2 \cdot 1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \begin{cases}
+                         1, \, - \frac{1}{2} \cdot \frac{5}{1999} \leq \omega + \frac{1}{2} \cdot \frac{5}{1999} \leq \frac{1}{2} \cdot \frac{5}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \sqrt{\frac{5}{3998 \pi}} \cdot
+                       \begin{cases}
+                         \sqrt{\frac{2 \pi}{\frac{5}{1999}}}, \, - \frac{1}{2} \cdot \frac{5}{1999} \leq \omega + \frac{1}{2} \cdot \frac{5}{1999} \leq \frac{1}{2} \cdot \frac{5}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases}
+  \end{split}
+\end{equation*}
+
+\subsubsection*{Find impulse response from frequency response}
+
+The cases of the $X(e^{j \omega})$ above represent a low-pass filter, hence by definition \ref{def:low_pass}, property \ref{prop:dtft_lin} and \ref{prop:dtft_freq_shift} its impulse response is:
+
+\begin{equation} \label{eq_t2:x_n}
+  \begin{split}
+    x_n &= \sqrt{\frac{5}{3998 \pi}} \cdot e^{-j \frac{5}{3998} n} \cdot \sqrt{\frac{\frac{5}{1999}}{2 \pi}} \sinc \left( \frac{\frac{5}{1999} n} {2} \right) \\
+        &= \frac{5}{3998 \pi} \cdot e^{-j \frac{5}{3998} n} \cdot \sinc \left( \frac{5}{3998} n \right)
+  \end{split}
+\end{equation}
+
+\subsubsection*{Define frequency response for filter to pass frequencies in $\left( 0; \; +\frac{7}{1999} \right]$}
+
+\begin{equation*}
+  \begin{split}
+    Y(e^{j \omega}) &= \begin{cases}
+                         1, \, 0 < \omega \leq \frac{7}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \begin{cases}
+                         1, \, 0 - \frac{7}{2 \cdot 1999} < \omega - \frac{7}{2 \cdot 1999} \leq \frac{7}{1999} - \frac{7}{2 \cdot 1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \begin{cases}
+                         1, \, - \frac{1}{2} \cdot \frac{7}{1999} < \omega - \frac{1}{2} \cdot \frac{7}{1999} \leq \frac{1}{2} \cdot \frac{7}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases} \\
+                    &= \sqrt{\frac{7}{3998 \pi}} \cdot
+                       \begin{cases}
+                         \sqrt{\frac{2 \pi}{\frac{7}{1999}}}, \, - \frac{1}{2} \cdot \frac{7}{1999} < \omega - \frac{1}{2} \cdot \frac{7}{1999} \leq \frac{1}{2} \cdot \frac{7}{1999} \\
+                         0, \, \text{otherwise}
+                       \end{cases}
+  \end{split}
+\end{equation*}
+
+\subsubsection*{Find impulse response from frequency response}
+
+The cases of the $Y(e^{j \omega})$ above represent a low-pass filter, hence by definition \ref{def:low_pass}, property \ref{prop:dtft_lin} and \ref{prop:dtft_freq_shift} its impulse response is:
+
+\begin{equation} \label{eq_t2:y_n}
+  \begin{split}
+    y_n &= \sqrt{\frac{7}{3998 \pi}} \cdot e^{j \frac{7}{3998} n} \cdot \sqrt{\frac{\frac{7}{1999}}{2 \pi}} \sinc \left( \frac{\frac{7}{1999} n} {2} \right) \\
+        &= \frac{7}{3998 \pi} \cdot e^{j \frac{7}{3998} n} \cdot \sinc \left( \frac{7}{3998} n \right)
+  \end{split}
+\end{equation}
+
+\subsubsection*{Combine filters to get the final filter}
+
+Because of \hyperref[prop:dtft_lin]{DTFT linearity}, the obtained filters in time domain can be summed together to obtain a filter that leaves only frequencies in range $\left[ -\frac{5}{1999}, + \frac{7}{1999} \right]$:
+
+\begin{equation*}
+  \begin{split}
+    z_n &= \eqref{eq_t2:x_n} + \eqref{eq_t2:y_n} = x_n + y_n \\
+        &= \frac{5}{3998 \pi} \cdot e^{-j \frac{5}{3998} n} \cdot \sinc \left( \frac{5}{3998} n \right) + \frac{7}{3998 \pi} \cdot e^{j \frac{7}{3998} n} \cdot \sinc \left( \frac{7}{3998} n \right)
+  \end{split}
+\end{equation*}
+
+\subsection*{Conclusion}
+
+Precomputed DTF transforms for common filters, \hyperref[prop:dtft_lin]{DTFT linearity}, \hyperref[prop:dtft_freq_shift]{DTFT shift in frequency} and other properties of DTFT enable to easily construct new filters without the need to evaluate complex integrals.
+
+\end{document}
